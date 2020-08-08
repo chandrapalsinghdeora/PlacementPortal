@@ -1,0 +1,125 @@
+package com.precise.controller;
+import java.io.PrintWriter;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+import com.precise.model.CloseStatus;
+import com.precise.model.Cluster;
+import com.precise.model.SessionBean;
+import com.precise.service.GetReportService;
+
+@Controller
+public class GetReportController {
+	@Autowired
+	GetReportService getreportservice;
+	
+	@RequestMapping(value = "/getreport", method = RequestMethod.GET)
+	public ModelAndView getReport(HttpServletRequest request) {
+		
+		int roleId,userId;
+		try
+		{
+		SessionBean sbean=(SessionBean)request.getSession().getAttribute("sessionBean");
+		userId=sbean.getUserID();
+		 roleId=sbean.getRoleID();
+		if(roleId!=6)
+		{
+			return new ModelAndView("LoginPage");
+		}
+		}catch(Exception e)
+		{
+			return new ModelAndView("LoginPage");
+		}
+		StringBuffer emailId=new StringBuffer(100000);
+	//	System.out.println(emailId.length());
+	//	System.out.println(emailId.capacity());
+		List<Cluster> designationdata = getreportservice.getAllCluster();
+		request.setAttribute("teamlist1", designationdata);
+		return new ModelAndView("getReport");
+		
+	}
+	
+	@RequestMapping(value="/GetallFirm")
+	public void getthemodules(HttpServletRequest request,HttpServletResponse response){
+		try{
+			PrintWriter pw=response.getWriter();
+			System.out.println("csd:::"+Integer.parseInt(request.getParameter("clusterId")));
+			pw.print(getreportservice.getfirms(Integer.parseInt(request.getParameter("clusterId"))));
+			pw.flush();
+			pw.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value="/downloadCL", method=RequestMethod.POST)
+	public String getTheReport(CloseStatus cs, HttpServletRequest request)
+	{
+	//	System.out.println("csddd11::"+cs.getCmpId()+" csddd22::"+cs.getClusterId()+" csddd33::"+cs.getRoleId());
+		List<CloseStatus> roleid=getreportservice.getAllRoleId(cs.getCmpId(),cs.getClusterReportId(),cs.getRoleId());
+		String downloadCLFile = request.getServletContext().getInitParameter("tempFileLocation")+"ConsiderList.xlsx";
+	//	getreportservice.getCL(cs.getCmpId());
+		getreportservice.getDownloadCL(roleid,cs.getClusterReportId(),downloadCLFile);
+		return "redirect:getreport";
+	}
+	
+	@RequestMapping(value="/downloadSL1", method=RequestMethod.POST)
+	public String getTheShortlist1(CloseStatus cs, HttpServletRequest request)
+	{
+		List<CloseStatus> roleid=getreportservice.getAllRoleId(cs.getCmpId(),cs.getClusterReportId(),cs.getRoleId());
+		String downloadSL1File = request.getServletContext().getInitParameter("tempFileLocation")+"ShortList1.xlsx";
+		getreportservice.getDownloadSL1(roleid,cs.getClusterReportId(),downloadSL1File);
+		return "redirect:getreport";
+	}
+    
+	
+	@RequestMapping(value="/downloadSL2", method=RequestMethod.POST)
+	public String getTheShortlist2(CloseStatus cs, HttpServletRequest request)
+	{
+		List<CloseStatus> roleid=getreportservice.getAllRoleId(cs.getCmpId(),cs.getClusterReportId(),cs.getRoleId());
+		String downloadSL2File = request.getServletContext().getInitParameter("tempFileLocation")+"ShortList2.xlsx";
+		getreportservice.getDownloadSL2(roleid,cs.getClusterReportId(),downloadSL2File);
+		return "redirect:getreport";
+	}
+	
+	@RequestMapping(value="/downloadHL", method=RequestMethod.POST) 
+	public String getTheHotlist(CloseStatus cs, HttpServletRequest request)
+	{
+		List<CloseStatus> roleid=getreportservice.getAllRoleId(cs.getCmpId(),cs.getClusterReportId(),cs.getRoleId());
+		String downloadHLFile = request.getServletContext().getInitParameter("tempFileLocation")+"HotList.xlsx";
+		getreportservice.getDownloadHL(roleid,cs.getClusterReportId(),downloadHLFile);
+		return "redirect:getreport";
+	}
+	
+	@RequestMapping(value="/downloadPF", method=RequestMethod.POST)
+	public String getThePreference(CloseStatus cs, HttpServletRequest request)
+	{
+		List<CloseStatus> roleid=getreportservice.getAllRoleId(cs.getCmpId(),cs.getClusterReportId(),cs.getRoleId());
+		String downloadPFFile = request.getServletContext().getInitParameter("tempFileLocation")+"HotList.xlsx";
+		getreportservice.getDownloadPF(roleid,cs.getClusterReportId(),downloadPFFile);
+		return "redirect:getreport";
+	}
+	
+
+	@RequestMapping(value="/GetallRole")
+	public void getthemodules(CloseStatus cs, HttpServletRequest request,HttpServletResponse response){
+		try{
+			PrintWriter pw=response.getWriter();
+			String s=request.getParameter("firmId");
+			String[] s1=s.split("clusterId");
+			int firmid=Integer.parseInt(s1[0]);
+			int clusterid=Integer.parseInt(s1[1]);
+			pw.print(getreportservice.getroles(firmid,clusterid));
+			pw.flush();
+			pw.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+}

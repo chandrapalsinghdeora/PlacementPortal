@@ -1,0 +1,160 @@
+package com.precise.controller;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.precise.model.OfferDream;
+import com.precise.model.SessionBean;
+import com.precise.service.OfferDreamService;
+
+@Controller
+public class OfferDreamController {
+	@Autowired
+	OfferDreamService odservice;
+@RequestMapping(value="/offerdream")
+public ModelAndView offerdream(HttpServletRequest request)
+{
+	int roleId;
+	try
+	{
+	SessionBean sbean=(SessionBean)request.getSession().getAttribute("sessionBean");
+	roleId=sbean.getRoleID();
+	if(roleId!=6)
+	{
+		return new ModelAndView("LoginPage");
+	}
+	}catch(Exception e)
+	{
+		return new ModelAndView("LoginPage");
+	}
+	return new ModelAndView("uploadOfferDream");
+}
+
+@RequestMapping(value="/offerexcel", method=RequestMethod.POST)
+public String uploadExcelStudent(ModelMap model, OfferDream od,HttpServletRequest request) throws Exception{
+	int conflict;
+	int flag=0;
+	HashSet<String> set=new HashSet<String>();  
+	String uploadRootPath = request.getServletContext().getInitParameter("uploadExcelFile");
+	System.out.println("uploadRootPath=" + uploadRootPath);
+	SessionBean sessionBean = (SessionBean) request.getSession().getAttribute("sessionBean");
+	int userid=sessionBean.getUserID();
+	File uploadRootDir = new File(uploadRootPath);
+	if (!uploadRootDir.exists()) {
+		uploadRootDir.mkdirs();
+	}
+	MultipartFile fileData = od.getFile();
+	//
+	String uploadedFiles = "";
+	String name = fileData.getOriginalFilename();
+	System.out.println("Client File Name = " + name);
+
+	if (name != null && name.length() > 0) {
+		 File serverFile = new File(uploadRootDir.getAbsolutePath() + File.separator + name);
+		 if(!serverFile.exists()){
+			 serverFile.createNewFile();
+		 }
+         BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
+         stream.write(fileData.getBytes());
+         stream.close();
+         System.out.println("Write file: " + serverFile.getCanonicalPath()+" :: "+serverFile.getAbsolutePath());
+         uploadedFiles=serverFile.getCanonicalPath();
+         System.out.println("Write file: " + serverFile);
+	}
+	// File uploadedFile = (potentialStudent.getFileName());
+	//FileInputStream file = new FileInputStream("D:/IIM.xlsx");
+	FileInputStream file = new FileInputStream(uploadedFiles);
+	XSSFWorkbook workbook = new XSSFWorkbook(file);
+	XSSFSheet sheet = workbook.getSheetAt(0);
+	Iterator<Row> rowIterator = sheet.iterator();
+	List<Object[]> l = new ArrayList<Object[]>();
+	if (rowIterator.hasNext()) {
+		rowIterator.next();
+	}
+	while (rowIterator.hasNext()) {
+		System.out.println("inside row ineratir:::");
+		Row row = rowIterator.next();
+		Iterator<Cell> cellIterator = row.cellIterator();
+		Object[] d = new Object[4];
+		int i = 0;
+
+		while (cellIterator.hasNext()) {
+			System.out.println("value of i::" + i);
+			Cell cell = cellIterator.next();
+			switch (cell.getCellType()) {
+            case Cell.CELL_TYPE_STRING:
+            	d[i] = cell.getStringCellValue();
+                break;
+            case Cell.CELL_TYPE_NUMERIC:
+            	Double doubleValue=cell.getNumericCellValue();
+            	d[i] = doubleValue.intValue();
+                break;
+        }
+			i = i + 1;
+			if (i == 1) {
+				System.out.println("inside if condition to put data in list");
+				l.add(d);
+			}
+		}
+	}
+/*	for (int j = 0; j < l.size(); j++) {
+		Object[] a = (Object[]) (l.get(j));
+		System.out.println("a[0]::" + a[0] + "a[1]::" + a[1]+":: a[2]::"+a[2]+":::a[3]"+a[3]);
+		kmiimstudentservice.insertIntoStudent(a);
+	}*/
+	    
+	//System.out.println("KmIIMStudentController.uploadExcelStudent() :: "+l.size());
+	for (int j = 0; j < (l.size()); j++) {
+		Object[] a = (Object[]) (l.get(j));
+		//System.out.println("a[0]::" + a[0] + "a[1]::" + a[1]+":: a[2]::"+a[2]+":::a[3]"+a[3]);
+		for (int k = j+1; k < l.size(); k++) {
+			Object[] b = (Object[]) (l.get(k));
+			if(a[0].equals(b[0])&&a[1].equals(b[1])&&a[2].equals(b[2])){
+				//System.out.println("hello "+a[3]+"  and "+b[3]);
+				flag=1;
+			}
+		}
+	}
+		//System.out.println("listsize::"+l.size());
+		//System.out.println("setsize::"+set.size());
+		//System.out.println("Conflicts::"+(l.size()-set.size()));
+	conflict = l.size()-set.size();
+		
+	if(flag==0){
+		for (int j = 0; j < l.size(); j++) {
+			Object[] a = (Object[]) (l.get(j));
+			if(od.getDiffer()==1)
+			odservice.insertIntoOffer(a,userid);
+			if(od.getDiffer()==2)
+			odservice.insertIntoUpdateApplication(a,userid);
+		}
+	}else{
+		System.out.println("sorry, redundency of data occured");
+		model.addAttribute("excelerror","Sorry, File Can't Uploaded ... Redundant UserName Found");
+		System.out.println(conflict);
+		model.addAttribute("errorcount",conflict);
+	}
+	return "redirect:offerdream";
+	
+}
+}

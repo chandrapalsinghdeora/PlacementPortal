@@ -1,0 +1,139 @@
+
+@media (max-width:767px) {
+	
+header .bottom-nav-menu .navbar #navbar { background-color: #000080;position: relative;
+    z-index: 2;
+}
+.bottom-nav-menu .nav > li > a {    color: #fff; }
+.bottom-nav-menu .navbar-default .navbar-nav > .active > a,
+ .bottom-nav-menu .navbar-default .navbar-nav > .active > a:hover,
+  .bottom-nav-menu .navbar-default .navbar-nav > .active > a:focus {
+  
+    color: #cccccc;
+}
+.navbar-default .navbar-nav .open .dropdown-menu > li > a {
+    color: #fff;
+}
+.navbar-default .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+    color: #cccccc;
+}
+
+.stepwizard-step { display: inline-block; width: 90px; }
+
+
+.mail-box .sm-side,.mail-box .lg-side { width: 100%; display: inline-block; }
+	
+.mail-box ul.inbox-pagination { float: left;  margin: 10px 0; }	
+	
+.pre-footer .footer-columns .footer-column { width: 50%; float: left;    margin: 10px 0;}	
+
+.stepwizard-row::before { display: none; }
+
+.table-responsive { padding: 10px; }
+
+
+
+	
+	
+}
+
+
+
+@media (max-width:640px) {
+
+.btn { margin-bottom: 10px;	}
+
+.google-login { margin-bottom: 20px ; }
+
+.table{margin-top:0;}
+	
+footer .social-icons {
+    float: right;
+    width: 100%;
+    text-align: center;
+    margin: 10px 0;
+}
+.marg {
+    text-align: center;
+}
+
+.copyright-info { float: left;  width: 100%; }
+
+footer .copyright-info ul { float:left; }
+
+footer .footer { min-height: 110px; }
+
+.logo-title { margin-left: 200px; }
+
+}
+
+@media (max-width:480px) {
+	
+	.pre-footer .footer-columns .footer-column { width: 100%; float: left;    margin: 10px 0;}	
+	
+.logo_hdr { left: 130px; }
+		
+#logo { top: -30px; left: 0px; }
+	
+#logo img {width: 120px;}
+	
+	
+.copyright-info span {display: inline-block; width: 100%; text-align: center;	}
+	
+footer .copyright-info ul {
+    float: left;
+    width: 250px;
+    margin: 0px auto;
+    float: none;
+}
+	
+.bottom-nav-menu #navbar {    margin-left: 0; }
+
+.time { width: 100%; text-align: center; display: inline-block; }
+.top-menu-bar ul li a { width: 100%;  text-align: center;  display: inline-block; }
+.logo-title {    margin-left: 0;    width: 100%; text-align: center; padding: 0 0 20px; font-size: 20px; }
+	
+.top-menu-bar .pull-right { width: 100%; }
+	
+	
+	
+	
+	
+}
+
+
+@media (max-width:360px) {
+
+.logo_hdr { left: 105px; font-size: 15px;  bottom: 38px; }
+
+#logo img {width: 100px;}	
+
+}
+
+@media (max-width:320px) {
+	
+#logo { top: -10px; left: 0px; }
+	
+#logo img {width: 100px;}	
+	
+.logo_hdr { bottom: 15px; }
+
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

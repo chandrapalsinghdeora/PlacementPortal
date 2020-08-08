@@ -1,0 +1,42 @@
+package com.precise.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.precise.dao.PanelAllocationDAO;
+import com.precise.model.PanelAllocation;
+@Service("panelService")
+public class PanelAllocationServiceImpl implements PanelAllocationService{
+    
+	@Autowired
+	PanelAllocationDAO panelDao;
+	@Override
+	public List<PanelAllocation> getFirmNameByCid(int cid) {
+		
+		return panelDao.getFirmNameByCid(cid);
+	}
+	@Override
+	public PanelAllocation getRmNameByFirmId(int firmId) {
+		return panelDao.getRmNameByFirmId(firmId);
+	}
+	@Override
+	public void savePanelAllocation(PanelAllocation pallocation) {
+		panelDao.savePanelAllocation(pallocation);
+	}
+	@Override
+	public List<PanelAllocation> getPanelAllotedListByClusterId(int clusterid) {
+		
+		return panelDao.getPanelAllotedListByClusterId(clusterid);
+	}
+	@Override
+	public List<PanelAllocation> getPanelAllotedList() {
+		return panelDao.getPanelAllotedList();
+	}
+	@Override
+	public PanelAllocation getPanelDeatilsByAppId(int firmId) {
+		return panelDao.getPanelDeatilsByAppId(firmId);
+	}
+
+}

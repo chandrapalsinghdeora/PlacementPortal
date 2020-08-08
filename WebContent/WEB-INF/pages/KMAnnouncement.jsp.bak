@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Indian Institute of Management Ahmedabad (IIMA) | Home - IIMA</title>
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet"
+	href="assets/css/bootstrap-datetimepicker.min.css" />
+
+
+</head>
+<body>
+	<jsp:include page="commonJsp/Header.jsp" />
+	<div class="clearfix"></div>
+	<div class="breadcumb-wrapper">
+		<div class="clearfix">
+			<div class="pull-left">
+				<ul class="list-inline link-list">
+					<li><a href="#">Home</a></li>
+					<li>Announcement</li>
+				</ul>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="space"></div>
+	<div class="clearfix"></div>
+
+	<div class="container min-height">
+
+		<div class="panel panel-primary">
+			<div class="panel-heading">Announcement</div>
+			<div class="panel-body">
+				
+				<form method="post" id="kmAnnouncementId" name="kmAnnouncement"
+					class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-2">Subject</label>
+						<div class="col-sm-4">
+							<input class="form-control" type="text" name="title" id="title"
+								required="required" placeholder="Please enter subject"
+								maxlength="50">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2">URL</label>
+						<div class="col-sm-4">
+							<input class="form-control" type="text" name="url" id="url"
+								required="required" placeholder="Please enter correct url"
+								maxlength="50">
+						</div>
+					</div>
+					<!-- <div class="form-group">
+						
+						 <label	class="col-sm-2">Description</label>
+						<div class="col-sm-4">
+							<textarea class="form-control" rows="5" name="description"
+								id="description" required="required"
+								placeholder="Write your description here." maxlength="300"></textarea>
+						</div>
+
+					</div> -->
+					
+					<div class="form-group col-md-12 text-center">
+						<input id="sendButton" type="button" value="Save"
+							class="btn btn-primary" data-toggle="modal"
+							onclick="submitAnn()" />
+						<!-- <input type="button" value="Cancel" class="btn btn-primary"
+							onclick="location.href='getKMAnnouncementPage'" /> -->
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	
+	<div class="space"></div>
+	<jsp:include page="commonJsp/Footer.jsp" />
+
+	<script src="assets/js/bootstrap-datepicker.min.js"></script>
+	<script src="assets/js/bootstrap-timepicker.min.js"></script>
+	<script src="assets/js/moment.min.js"></script>
+	<script src="assets/js/bootstrap-datetimepicker.min.js"></script>
+	<script src="assets/js/ace.min.js"></script>
+	
+</body>
+<script>
+
+	function submitAnn() {
+		document.getElementById("kmAnnouncementId").action = "addAnnouncementByKM";
+		document.getElementById("kmAnnouncementId").method = "post";
+		document.forms["kmAnnouncementId"].submit();
+	}
+</script>
+</html>

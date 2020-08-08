@@ -1,0 +1,16 @@
+package com.precise.service;
+
+import java.util.List;
+
+import com.precise.model.PanelAllocation;
+
+public interface PanelAllocationService {
+
+	List<PanelAllocation> getFirmNameByCid(int cid);
+	PanelAllocation getRmNameByFirmId(int firmId);
+	void savePanelAllocation(PanelAllocation pallocation);
+	List<PanelAllocation> getPanelAllotedListByClusterId(int clusterid);
+	List<PanelAllocation> getPanelAllotedList();
+	PanelAllocation getPanelDeatilsByAppId(int firmId);
+
+}

@@ -1,0 +1,23 @@
+package com.precise.mail;
+
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
+
+/**
+ *
+ * @author komal Jain
+ */
+class SimpleMailAuthenticator extends Authenticator {
+	private String username = null;
+	private String password = null;
+
+	public SimpleMailAuthenticator(String username, String password) {
+		this.username = username;
+		this.password = password;
+	}
+
+	@Override
+	public PasswordAuthentication getPasswordAuthentication() {
+		return new PasswordAuthentication(username, password);
+	}
+}

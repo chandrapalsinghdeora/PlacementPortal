@@ -1,0 +1,39 @@
+package com.precise.controller;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.precise.model.AssignRole;
+import com.precise.service.AssignRoleService;
+
+@Controller
+public class SchedulingAdministratorController {
+	@Autowired
+	AssignRoleService assignRoleService;   
+	
+	@RequestMapping(value = { "/getScheduleAdminPage" }, method = { RequestMethod.GET})
+	public String getSchedulingAdministratorPage(HttpServletRequest req, ModelMap model) {
+		System.out.println("SchedulingAdministratorController.getSchedulingAdministratorPage()");
+		List<AssignRole> getRole=assignRoleService.getAssignRoles();
+		req.setAttribute("assignRole", getRole);
+		return "scheduleAdministratorPage";
+		
+	}
+	
+	@RequestMapping(value = { "/getDynamicAssignRole" }, method = { RequestMethod.GET})
+	public String getDynamicAssignRole(HttpServletRequest req, ModelMap model) {
+		System.out.println("SchedulingAdministratorController.getSchedulingAdministratorPage()");
+		List<AssignRole> getRole=assignRoleService.getAssignRoles();
+		req.setAttribute("assignRole", getRole);
+		return "assignDynamicRole";
+		
+	}
+	
+}

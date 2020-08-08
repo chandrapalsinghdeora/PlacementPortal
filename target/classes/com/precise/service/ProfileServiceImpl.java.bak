@@ -1,0 +1,86 @@
+package com.precise.service;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.precise.dao.ProfileDao;
+import com.precise.model.Label;
+import com.precise.model.StudentBean;
+import com.precise.model.UserProfile;
+
+@Service
+public  class ProfileServiceImpl implements ProfileService{
+	
+	@Autowired
+	ProfileDao profileDao;
+	
+	public String submitProfileData(UserProfile userProfile,int userId,int roleId) throws SQLException{
+		return profileDao.submitUserData(userProfile,userId,roleId) ;
+	}
+	
+	public UserProfile getUserProfileValue(int userId,UserProfile userProfile){
+		return profileDao.getUsersDetails(userId,userProfile);
+	}
+	
+	/*public byte[] getImageByteData(int pkId){
+		return profileDao.getByteData(pkId);
+	}*/
+	
+	public List<StudentBean> getStudentListForMentors(int userId){
+		return profileDao.getStudentList(userId);
+	}
+	
+	public String getPhotoUploadData(int pkId){
+		return profileDao.getPhotoUploadData(pkId);
+	}
+	
+	public String getDaWriteUp(int pkId){
+		return profileDao.getDAWriteUp(pkId);
+	}
+	
+	public String getUserName(int userId){
+		return profileDao.getUserName(userId);
+	}
+	
+	public String getExperienceData(int userId){
+		return profileDao.getExperineceValues(userId);
+	}
+	
+	public String deleteSummerInternsgipData(String pkId){
+		return profileDao.deleteSummerInternship(pkId);
+	}
+	
+	public String deleteOtherInternsShip(String pkId){
+		return profileDao.deleteOtherInternshipData(pkId);
+	}
+	
+	public String deleteWorkExperinece(String pkId){
+		return profileDao.deleteWorkExperience(pkId);
+	}
+	
+	public String deleteCvFile(String pkId){
+		return profileDao.deleteCvFile(pkId);
+	}
+	
+	public List<Label> getMentoreList(){
+		return profileDao.getMenoreList();
+	}
+	
+	public String getMentoreName(int stuId){
+		return profileDao.getMentoreName(stuId);
+	}
+	
+	
+	public String getGroupValues(int studentId){
+		return profileDao.getGrupValues(studentId);
+	}
+
+	@Override
+	public String getImageFile(int pkId) {
+		return profileDao.getImageFile(pkId);
+	}
+
+}

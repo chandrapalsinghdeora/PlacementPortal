@@ -1,0 +1,105 @@
+package com.precise.controller;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.precise.model.Cluster;
+import com.precise.model.ProcessManagement;
+import com.precise.model.SessionBean;
+import com.precise.service.ProcessService;
+
+@Controller
+public class ProcessController {
+	
+	@Autowired
+	ProcessService processService;
+	
+	@RequestMapping(value={"/getProcess"},method={RequestMethod.GET})
+	public String getProcess(ProcessManagement processManagement,HttpServletRequest request) {
+		
+		int roleId,userid;
+		try
+		{
+		SessionBean sbean=(SessionBean)request.getSession().getAttribute("sessionBean");
+		 userid=sbean.getUserID();
+		 roleId=sbean.getRoleID();
+		if(roleId!=6)
+		{
+			return "redirect:login";
+		}
+		}catch(Exception e)
+		{
+			return "redirect:login";
+		}
+		List<ProcessManagement> ProcessList = processService.getAllProcess();
+		request.setAttribute("processList", ProcessList);
+		return "processMaster";
+	}
+	
+	@RequestMapping(value={"/getProcess"},method={RequestMethod.POST})
+	public String submitProces(ProcessManagement processManagement,HttpServletRequest request) {
+		
+		int roleId,userid;
+		try
+		{
+		SessionBean sbean=(SessionBean)request.getSession().getAttribute("sessionBean");
+		 userid=sbean.getUserID();
+		 roleId=sbean.getRoleID();
+		if(roleId!=6)
+		{
+			return "redirect:login";
+		}
+		}catch(Exception e)
+		{
+			return "redirect:login";
+		}
+		try {
+			if(processManagement!=null){
+				processManagement.setCreatedBy(userid);
+				List<ProcessManagement> ProcessList = processService.getAllProcess();
+				request.setAttribute("processList", ProcessList);
+				if(processManagement.getProcessId()==0){
+					processService.submitProces(processManagement);
+				}else{
+					processService.editProcessForm(processManagement);
+					//System.out.println("update cluster id :: "+cluster.getClusterId());
+				}
+			}
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		 return "redirect:getProcess";
+	}
+	
+	@RequestMapping(value="/deleteProcess",method={ RequestMethod.POST})
+	public String deleteProcessData(HttpServletRequest request){
+		int roleId,userid;
+		try
+		{
+		SessionBean sbean=(SessionBean)request.getSession().getAttribute("sessionBean");
+		 userid=sbean.getUserID();
+		 roleId=sbean.getRoleID();
+		if(roleId!=6)
+		{
+			return "redirect:login";
+		}
+		}catch(Exception e)
+		{
+			return "redirect:login";
+		}
+		ProcessManagement processManagement = new ProcessManagement();
+		processManagement.setCreatedBy(userid);
+		processManagement.setProcessId(Integer.parseInt(request.getParameter("deleteProcessId")));
+		processService.deleteProcessData(processManagement);
+		return "redirect:getProcess";
+	}
+
+}
